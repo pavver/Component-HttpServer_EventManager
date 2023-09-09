@@ -43,7 +43,7 @@ __attribute__((noinline)) static esp_err_t post_handler(httpd_req_t *req, uint8_
 
 __attribute__((noinline)) static esp_err_t HandleMethod(const char *method, httpd_req_t *req, esp_err_t(handler)(httpd_req_t *))
 {
-  if (strlen(req->uri) > strlen(method) && cntstr(&req->uri[strlen(req->uri) - strlen(method)], method))
+  if (strlen(req->uri) > strlen(method) && cmpstr(&req->uri[strlen(req->uri) - strlen(method)], method))
     return handler(req);
   return ESP_FAIL;
 }
