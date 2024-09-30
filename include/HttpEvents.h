@@ -4,6 +4,7 @@
 #include "EventManager.h"
 #include "esp_err.h"
 #include <esp_http_server.h>
+#include "httpServer.h"
 
 __attribute__((noinline)) static esp_err_t post_handler(httpd_req_t *req, uint8_t type, uint8_t subtype, size_t max_content_len = 0, bool isRequest = false)
 {
@@ -53,16 +54,4 @@ __attribute__((noinline)) static esp_err_t HandleMethod(const char *method, http
   if (err > ESP_FAIL)                    \
     return err;
 
-const char *AccessControlAllowOrigin = "Access-Control-Allow-Origin";
 
-static esp_err_t options_handler(httpd_req_t *req)
-{
-  const char *header = "Access-Control-Allow-Methods";
-  httpd_resp_set_hdr(req, AccessControlAllowOrigin, "*");
-  httpd_resp_set_hdr(req, header, "Content-Type");
-  httpd_resp_set_hdr(req, header, "POST, OPTIONS");
-
-  httpd_resp_sendstr_chunk(req, NULL);
-
-  return ESP_OK;
-}
