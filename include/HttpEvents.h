@@ -30,13 +30,14 @@ __attribute__((noinline)) static esp_err_t post_handler(httpd_req_t *req, uint8_
   if (isRequest)
   {
     EventRequestData *eventReq = (EventRequestData *)eventManager
-                                     ->AddEvent(type, subtype, inputData, isRequest);
+                                     ->AddEvent(type, subtype, inputData, isRequest, req);
     eventReq->Wait();
-    httpd_resp_sendstr(req, (char *)eventReq->getValue());
+    if (eventReq->getValue() != nullptr)
+      httpd_resp_sendstr(req, (char *)eventReq->getValue());
     eventReq->Done();
   }
   else
-    eventManager->AddEvent(type, subtype, inputData, isRequest);
+    eventManager->AddEvent(type, subtype, inputData, isRequest, req);
 
   httpd_resp_sendstr_chunk(req, NULL);
   return ESP_OK;
@@ -53,5 +54,3 @@ __attribute__((noinline)) static esp_err_t HandleMethod(const char *method, http
   err = HandleMethod(url, req, handler); \
   if (err > ESP_FAIL)                    \
     return err;
-
-
